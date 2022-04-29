@@ -5,7 +5,7 @@ task :default => ['test:all']
 
 namespace :test do
   desc "test all drivers"
-  task :all => [:mysql2, :postgresql, :sqlite]
+  task :all => [:mysql2, :postgresql, :sqlite, :formatters]
 
   desc "test mysql driver"
   task :mysql do
@@ -19,12 +19,17 @@ namespace :test do
 
   desc "test PostgreSQL driver"
   task :postgresql do
-    sh "DRIVER=postgresql DB_USERNAME=postgres bundle exec ruby -Ilib -Itest test/*_test.rb"
+    sh "DRIVER=postgresql DB_USERNAME=postgres bundle exec ruby -Ilib -Itest test/query_comments_test.rb"
   end
 
   desc "test sqlite3 driver"
   task :sqlite do
-    sh "DRIVER=sqlite3 bundle exec ruby -Ilib -Itest test/*_test.rb"
+    sh "DRIVER=sqlite3 bundle exec ruby -Ilib -Itest test/query_comments_test.rb"
+  end
+
+  desc "test formatters"
+  task :formatters do
+    sh "bundle exec ruby -Ilib -Itest test/formatters_test.rb"
   end
 end
 

@@ -112,6 +112,20 @@ In order to not lose the marginalia comments from your logs, you can prepend the
 
     Marginalia::Comment.prepend_comment = true
 
+#### Comment formatting
+
+Comment formatting can be configured to be more machine-readable by adding this command: `Marginalia::Comment.update_formatter!(:sqlcommenter)`. This will format Marginalia comments to be consistent with other SQL commenting projects, like [Google's sqlcommenter](https://google.github.io/sqlcommenter/).
+
+This format makes the following changes:
+1. The key-value separator will use an equals sign (`=`) instead of a colon (`:`).
+2. Values will be surrounded with single quotes (`'`) and escape internal quotes as `\'`.
+
+For example, a SQL query like this:
+`"select id from posts /*application:Joe's app,controller:my_controller*/"`
+
+will be formatted like this:
+`"select id from posts /*application='Joe\\'s app',controller='my_controller*/"`
+
 #### Inline query annotations
 
 In addition to the request or job-level component-based annotations,
@@ -132,6 +146,16 @@ will issue this query:
     /*application:BCX,controller:project_imports,action:show*/ /*foo*/
 
 Nesting `with_annotation` blocks will concatenate the comment strings.
+
+### Caveats
+
+#### Prepared statements
+
+Be careful when using Marginalia with prepared statements. If you use a component
+like `request_id` then every query will be unique and so ActiveRecord will create
+a new prepared statement for each potentially exhausting system resources.
+[Disable prepared statements](https://guides.rubyonrails.org/configuring.html#configuring-a-postgresql-database)
+if you wish to use components with high cardinality values.
 
 ## Contributing
 
