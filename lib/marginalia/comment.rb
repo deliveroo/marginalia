@@ -105,7 +105,7 @@ module Marginalia
       end
 
       def self.controller_with_namespace
-        marginalia_controller.class.name if marginalia_controller
+        marginalia_controller.class.name.gsub('::', '_').downcase if marginalia_controller
       end
 
       def self.action
